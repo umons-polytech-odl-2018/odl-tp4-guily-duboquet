@@ -1,21 +1,28 @@
 package exercise2;
 
-import java.io.IOException;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 
-public class Exercise2 {
-	public static void save(Classroom classroom, Path filePath) {
+public class Exercise2 implements Serializable{
+	public static void save(Classroom classroom, Path filePath) throws IOException{
+		try(OutputStream output = Files.newOutputStream(filePath)){
+			ObjectOutput objectOutput = new ObjectOutputStream(output);
+			objectOutput.writeObject((classroom));
+		}
 
 	}
-
-	public static Classroom load(Path filePath) {
-		return null;
+	public static Classroom load(Path filePath) throws IOException, ClassNotFoundException {
+		try(InputStream output = Files.newInputStream(filePath)){
+			ObjectInput objectOutput = new ObjectInputStream(output);
+			return (Classroom) objectOutput.readObject();
+		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		Teacher teacher = new Teacher("Claire", "Barnett",
 			LocalDate.of(1975, 3, 7), new PhoneNumber("+32 65 123 456"),
 			new Location("Ho.23", "Houdain"));
